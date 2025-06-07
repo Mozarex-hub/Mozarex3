@@ -1,122 +1,61 @@
 <!doctype html>
-<html lang="fa" dir="rtl">
+<html lang="fa">
   <head>
-    <meta charset="UTF-8">
-    <title>تخمین طول عمر توسط MOZAREX™ - نتیجه</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>نتایج پیش‌بینی</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
       body {
         direction: rtl;
-        background: linear-gradient(to left, #ece9e6, #ffffff);
-        font-family: 'Tahoma', Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-      }
-      .container {
-        width: 85%;
-        max-width: 700px;
-        background-color: #fff;
-        margin: 40px auto;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        text-align: center;
-      }
-      h1 {
-        color: #2980b9;
-      }
-      p {
-        font-size: 18px;
-        color: #34495e;
-      }
-      .result-box {
-        font-size: 22px;
-        font-weight: bold;
-        padding: 15px;
-        border-radius: 8px;
-        display: inline-block;
-        margin-top: 20px;
-      }
-      .low {
-        background-color: #e74c3c;
-        color: #fff;
-      }
-      .medium {
-        background-color: #f39c12;
-        color: #fff;
-      }
-      .high {
-        background-color: #27ae60;
-        color: #fff;
-      }
-      .advice {
-        margin-top: 20px;
-        font-size: 16px;
-        color: #2c3e50;
-        padding: 15px;
-        background-color: #ecf0f1;
-        border-radius: 8px;
-      }
-      .button-container {
-        margin-top: 30px;
-      }
-      .button {
-        background-color: #2980b9;
-        color: #fff;
-        padding: 12px 20px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 16px;
-        text-decoration: none;
-        display: inline-block;
-      }
-      .button:hover {
-        background-color: #3498db;
-      }
-      .logo-container {
-        text-align: center;
-        margin-top: 20px;
-      }
-      .logo {
-        width: 100px;
       }
       .footer {
+        margin-top: 50px;
         text-align: center;
-        margin-top: 20px;
-        font-size: 12px;
-        color: #95a5a6;
+        font-size: 0.9em;
       }
     </style>
   </head>
-  <body>
-    <div class="container">
-      <h1>طول عمر تخمینی شما</h1>
-      
-      <div class="result-box {% if result|int < 60 %}low{% elif result|int < 80 %}medium{% else %}high{% endif %}">
-        <p>{{ result }}</p>
+  <body class="bg-light">
+    <div class="container py-5">
+      <div class="text-center mb-4">
+        <img src="{{ url_for('static', filename='logo.png') }}" class="img-fluid" alt="لوگوی شرکت" style="max-height: 80px;">
       </div>
-
-      <div class="advice">
-        {% if result|int < 60 %}
-          <p>🔴 توصیه: سبک زندگی سالم‌تری را در پیش بگیرید! ورزش منظم، تغذیه سالم و کاهش استرس می‌تواند تأثیر زیادی داشته باشد.</p>
-        {% elif result|int < 80 %}
-          <p>🟠 توصیه: شما در وضعیت متوسطی هستید. با بهبود کیفیت خواب، افزایش فعالیت بدنی و کاهش مصرف مواد مضر، می‌توانید طول عمر خود را افزایش دهید.</p>
-        {% else %}
-          <p>🟢 عالی! شما سبک زندگی سالمی دارید. حفظ این روند و مراقبت از سلامت روانی و جسمی می‌تواند به طول عمر بیشتر کمک کند.</p>
-        {% endif %}
+      <h1 class="text-center">
+        آنالیزگر سلامت <sup style="vertical-align:super; font-size:0.7em;">™</sup> MOZAREX
+      </h1>
+      <h2 class="text-center mb-4">نسخه 1.0</h2>
+      <div class="text-center mb-4">
+        <img src="{{ file_url }}" class="img-thumbnail" alt="عکس آپلود شده" style="max-width: 300px;">
       </div>
-
-      <div class="button-container">
-        <a href="/" class="button">🔄 محاسبه مجدد</a>
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h3 class="card-title">پارامترهای زیستی و سلامت شما</h3>
+          <ul class="list-group list-group-flush">
+            {% for key, value in predictions.items() %}
+            <li class="list-group-item"><strong>{{ key }}:</strong> {{ value }}</li>
+            {% endfor %}
+          </ul>
+        </div>
       </div>
-
-      <div class="logo-container">
-        <img src="/static/logo.jpeg" alt="Logo" class="logo">
+      <div class="alert alert-info text-center">
+        <p>
+          پیش‌بینی‌های ارائه شده با استفاده از الگوریتم‌های یادگیری ماشین و با استناد به یافته‌های مطالعات منتشر شده در پایگاه‌های داده علمی مانند 
+          <a href="https://pubmed.ncbi.nlm.nih.gov/" target="_blank" class="text-decoration-none">PubMed</a>
+          انجام شده‌اند.
+        </p>
       </div>
-
-      <div class="footer">
-        &copy; 2025 MOZAREX™. تمامی حقوق محفوظ است.
+      <div class="text-center">
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">آپلود عکس جدید</a>
       </div>
     </div>
+    <footer class="footer">
+      <hr>
+      <div>
+        <img src="{{ url_for('static', filename='logo.png') }}" class="img-fluid" alt="لوگوی شرکت" style="max-height: 50px;">
+      </div>
+      <p>تمامی حقوق محفوظ است</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
