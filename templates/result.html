@@ -1,53 +1,160 @@
 <!doctype html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>نتایج تحلیل سن بیولوژیک - MOZAREX<sup style="font-size: 0.7em; vertical-align: super;">™</sup></title>
+    <title>
+      نتایج تحلیل سن بیولوژیک - MOZAREX<sup style="font-size: 0.7em; vertical-align: super;">™</sup>
+    </title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Animate.css for animations -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <!-- Vazir Font -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet" type="text/css"/>
     <style>
+      :root {
+        --primary-color: #00d1ff; /* Neon blue */
+        --secondary-color: #141E30;
+        --tertiary-color: #243B55;
+        --bg-gradient: linear-gradient(135deg, var(--secondary-color), var(--tertiary-color));
+        --card-bg: rgba(255, 255, 255, 0.1);
+        --card-border: rgba(255, 255, 255, 0.2);
+        --text-color: #fff;
+      }
+      
+      /* Animated Background Gradient */
+      @keyframes gradientAnimation {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      
+      /* Neon Glow Animation for Headings */
+      @keyframes neonGlow {
+        from {
+          text-shadow: 0 0 5px var(--primary-color), 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
+        }
+        to {
+          text-shadow: 0 0 20px var(--primary-color), 0 0 30px var(--primary-color), 0 0 40px var(--primary-color);
+        }
+      }
+      
+      /* Base Styles */
       body {
         direction: rtl;
-        background: linear-gradient(135deg, #e0eafc, #cfdef3);
+        background: var(--bg-gradient);
+        background-size: 400% 400%;
+        animation: gradientAnimation 15s ease infinite;
         font-family: 'Vazir', sans-serif;
+        color: var(--text-color);
+        margin: 0;
+        padding: 0;
       }
+      
+      /* Navigation Bar with Glassmorphism */
       .navbar {
-        background-color: #007bff;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(10px);
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
       }
       .navbar-brand {
         font-weight: bold;
-        color: #fff !important;
+        color: var(--primary-color) !important;
+        font-size: 1.8rem;
       }
+      
+      /* Hero Section with Neon Effect */
       .hero-section {
-        margin-top: 50px;
-        margin-bottom: 30px;
+        padding-top: 120px;
+        padding-bottom: 60px;
         text-align: center;
-        color: #333;
       }
+      .hero-section h1 {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 0 20px var(--primary-color);
+        animation: neonGlow 1.5s ease-in-out infinite alternate;
+      }
+      .hero-section h3 {
+        font-size: 1.8rem;
+        color: var(--primary-color);
+      }
+      .hero-section img {
+        max-height: 90px;
+        filter: drop-shadow(0 0 10px var(--primary-color));
+      }
+      
+      /* Glassmorphism Card */
       .card {
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--card-border);
         border-radius: 20px;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         margin-bottom: 30px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
       }
-      .btn-custom {
-        background-color: #007bff;
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+      }
+      
+      /* Results Image Style */
+      .result-img {
+        border: 2px solid var(--primary-color);
+        border-radius: 10px;
+        max-width: 300px;
+        width: 100%;
+        transition: transform 0.3s ease;
+      }
+      .result-img:hover {
+        transform: scale(1.05);
+      }
+      
+      /* Style for List Group Items */
+      .list-group-item {
+        background: transparent;
         border: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        color: var(--text-color);
+        padding: 10px 0;
+      }
+      
+      /* Futuristic Button */
+      .btn-custom {
+        background: transparent;
+        border: 2px solid var(--primary-color);
         border-radius: 50px;
-        padding: 12px 20px;
-        transition: background-color 0.3s;
+        padding: 12px 30px;
+        font-size: 1.1rem;
+        color: var(--primary-color);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        letter-spacing: 1px;
       }
       .btn-custom:hover {
-        background-color: #0056b3;
+        background: var(--primary-color);
+        color: var(--text-color);
+        box-shadow: 0 0 20px var(--primary-color);
       }
+      
+      /* Footer Styling */
       .footer {
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(5px);
         text-align: center;
         padding: 20px 0;
-        background-color: #fff;
-        color: #666;
-        margin-top: 50px;
+        color: var(--text-color);
+        margin-top: 40px;
+      }
+      .footer img {
+        max-height: 50px;
+        filter: brightness(0) invert(1);
       }
     </style>
   </head>
@@ -61,11 +168,11 @@
     
     <!-- Hero Section -->
     <div class="container hero-section">
-      <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="لوگوی شرکت" class="animate__animated animate__fadeInDown" style="max-height:90px;">
+      <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="لوگوی شرکت" class="animate__animated animate__fadeInDown">
       <h1 class="mt-3 animate__animated animate__fadeInDown">
         تعیین سن بیولوژیک توسط MOZAREX<sup style="font-size: 0.7em; vertical-align: super;">™</sup>
       </h1>
-      <h3 class="text-muted animate__animated animate__fadeInDown">نسخه 1.0</h3>
+      <h3 class="animate__animated animate__fadeInDown">نسخه 1.0</h3>
     </div>
     
     <!-- Results Card -->
@@ -74,7 +181,7 @@
         <div class="card-body">
           <h4 class="card-title text-center mb-4">نتایج تحلیل</h4>
           <div class="text-center mb-4">
-            <img src="{{ file_url }}" alt="عکس آپلود شده" class="img-thumbnail" style="max-width:300px;">
+            <img src="{{ file_url }}" alt="عکس آپلود شده" class="result-img animate__animated animate__fadeIn">
           </div>
           <ul class="list-group list-group-flush">
             {% for key, value in predictions.items() %}
@@ -91,9 +198,9 @@
     <!-- Footer -->
     <footer class="footer">
       <div>
-        <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="لوگوی شرکت" style="max-height:50px;">
+        <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="لوگوی شرکت" class="animate__animated animate__fadeInUp">
       </div>
-      <p>تمامی حقوق محفوظ است</p>
+      <p class="mt-2">تمامی حقوق محفوظ است</p>
     </footer>
     
     <!-- Bootstrap JS Bundle -->
