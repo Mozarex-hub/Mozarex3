@@ -1,10 +1,14 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
 import os
 import cv2
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import load_model
+from flask import Flask, render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
+import uuid
+
+# Disable GPU if you don't plan to use one (this suppresses CUDA initialization warnings)
+os.environ['CUDA_VISIBLE_DEVICES'] = ''
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key_here"
@@ -29,6 +33,7 @@ def preprocess_image(image_path, target_size=(64, 64)):
     """
     image = cv2.imread(image_path)
     if image is None:
+        print(f"Error: Unable to read image at {image_path}")
         return None
     image = cv2.resize(image, target_size)
     image = image.astype("float32") / 255.0
@@ -44,9 +49,13 @@ def predict_biologic_age(image_path):
         return {"خطا": "بارگذاری تصویر با مشکل مواجه شد."}
     
     if model_loaded:
-        age_pred = bio_age_model.predict(preprocessed)[0][0]
-        bio_age = round(float(age_pred), 1)
-        predictions = {"سن بیولوژیکی": f"{bio_age} سال"}
+        try:
+            age_pred = bio_age_model.predict(preprocessed)[0][0]
+            bio_age = round(float(age_pred), 1)
+            predictions = {"سن بیولوژیکی": f"{bio_age} سال"}
+        except Exception as ex:
+            print("Error during prediction:", ex)
+            predictions = {"خطا": "خطایی در پیش‌بینی رخ داده است."}
     else:
         # Fallback dummy prediction if the model is not available
         import random
@@ -60,22 +69,28 @@ def index():
         if "photo" not in request.files:
             flash("فایلی در درخواست یافت نشد.", "warning")
             return redirect(request.url)
+            
         file = request.files["photo"]
         if file.filename == "":
             flash("فایلی انتخاب نشده است.", "warning")
             return redirect(request.url)
         
-        # Secure the filename and save the file
-        filename = secure_filename(file.filename)
-        filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
-        file.save(filepath)
+        # Generate a unique filename to prevent collisions
+        unique_filename = f"{uuid.uuid4().hex}_{secure_filename(file.filename)}"
+        filepath = os.path.join(app.config["UPLOAD_FOLDER"], unique_filename)
+        
+        try:
+            file.save(filepath)
+        except Exception as ex:
+            flash("خطا در ذخیره فایل.", "danger")
+            print("File save error:", ex)
+            return redirect(request.url)
         
         # Predict biologic age and generate the file URL for display
         predictions = predict_biologic_age(filepath)
-        file_url = url_for("static", filename="uploads/" + filename)
+        file_url = url_for("static", filename="uploads/" + unique_filename)
         return render_template("result.html", predictions=predictions, file_url=file_url)
     
-    # Render the futuristic index page
     return render_template("index.html")
 
 if __name__ == "__main__":
