@@ -1,95 +1,28 @@
+from flask import Flask, render_template, request, jsonify
 import os
-import cv2
-import numpy as np
-import tensorflow as tf
-from tensorflow.keras.models import load_model
-from flask import Flask, render_template, request, redirect, url_for, flash
-from werkzeug.utils import secure_filename
-import uuid
-
-# Disable GPU if you don't plan to use one (this suppresses CUDA initialization warnings)
-os.environ['CUDA_VISIBLE_DEVICES'] = ''
+from model import predict_age  # Placeholder for the AI model
 
 app = Flask(__name__)
-app.secret_key = "your_secret_key_here"
-app.config["UPLOAD_FOLDER"] = "static/uploads"
-app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024  # Maximum file size 16 MB
-
-# Ensure the upload directory exists
-os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
-
-# Try to load the biologic age prediction model
-try:
-    bio_age_model = load_model("models/biologic_age_model.h5")
-    model_loaded = True
-    print("مدل سن بیولوژیکی با موفقیت بارگذاری شد.")
-except Exception as e:
-    print("خطا در بارگذاری مدل:", e)
-    model_loaded = False
-
-def preprocess_image(image_path, target_size=(64, 64)):
-    """
-    Loads and preprocesses the image: resize, normalize, and add batch dimension.
-    """
-    image = cv2.imread(image_path)
-    if image is None:
-        print(f"Error: Unable to read image at {image_path}")
-        return None
-    image = cv2.resize(image, target_size)
-    image = image.astype("float32") / 255.0
-    image = np.expand_dims(image, axis=0)
-    return image
-
-def predict_biologic_age(image_path):
-    """
-    Uses the loaded model (or a dummy alternative) to predict the biologic age from an image.
-    """
-    preprocessed = preprocess_image(image_path)
-    if preprocessed is None:
-        return {"خطا": "بارگذاری تصویر با مشکل مواجه شد."}
-    
-    if model_loaded:
-        try:
-            age_pred = bio_age_model.predict(preprocessed)[0][0]
-            bio_age = round(float(age_pred), 1)
-            predictions = {"سن بیولوژیکی": f"{bio_age} سال"}
-        except Exception as ex:
-            print("Error during prediction:", ex)
-            predictions = {"خطا": "خطایی در پیش‌بینی رخ داده است."}
-    else:
-        # Fallback dummy prediction if the model is not available
-        import random
-        dummy_age = random.randint(30, 80)
-        predictions = {"سن بیولوژیکی": f"{dummy_age} سال (مقدار ساختگی)"}
-    return predictions
+UPLOAD_FOLDER = "static/uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
-        if "photo" not in request.files:
-            flash("فایلی در درخواست یافت نشد.", "warning")
-            return redirect(request.url)
-            
-        file = request.files["photo"]
+        if "file" not in request.files:
+            return jsonify({"error": "فایلی انتخاب نشده است."})
+        
+        file = request.files["file"]
         if file.filename == "":
-            flash("فایلی انتخاب نشده است.", "warning")
-            return redirect(request.url)
+            return jsonify({"error": "نامعتبر است."})
         
-        # Generate a unique filename to prevent collisions
-        unique_filename = f"{uuid.uuid4().hex}_{secure_filename(file.filename)}"
-        filepath = os.path.join(app.config["UPLOAD_FOLDER"], unique_filename)
+        filepath = os.path.join(app.config["UPLOAD_FOLDER"], file.filename)
+        file.save(filepath)
         
-        try:
-            file.save(filepath)
-        except Exception as ex:
-            flash("خطا در ذخیره فایل.", "danger")
-            print("File save error:", ex)
-            return redirect(request.url)
+        predicted_age = predict_age(filepath)  # Call AI model
         
-        # Predict biologic age and generate the file URL for display
-        predictions = predict_biologic_age(filepath)
-        file_url = url_for("static", filename="uploads/" + unique_filename)
-        return render_template("result.html", predictions=predictions, file_url=file_url)
+        return jsonify({"age": predicted_age, "image": filepath})
     
     return render_template("index.html")
 
