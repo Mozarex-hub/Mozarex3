@@ -1,51 +1,51 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mozarex Biologic Age Estimator</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تخمینگر سن بیولوژیکی موزارکس</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #141e30, #243b55);
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+    }
+    .container {
+      margin-top: 100px;
+    }
+    .btn-primary {
+      background-color: #1abc9c;
+      border: none;
+    }
+    footer {
+      margin-top: 50px;
+      padding: 20px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.3);
+      text-align: center;
+    }
+    footer img {
+      max-width: 80px;
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>تخمین سن بیولوژیکی</h1>
-        <p>عکس خود را بارگذاری کنید تا سن بیولوژیکی شما تخمین زده شود.</p>
-        
-        <form id="upload-form" enctype="multipart/form-data">
-            <input type="file" id="file-input" name="file" accept="image/*">
-            <button type="submit">بارگذاری و تخمین سن</button>
-        </form>
-        
-        <div id="result"></div>
-        
-        <footer>
-            <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="Mozarex Logo">
-            <p>تمامی حقوق محفوظ است © 2025 Mozarex</p>
-        </footer>
-    </div>
-
-    <script>
-        document.getElementById("upload-form").addEventListener("submit", function(event) {
-            event.preventDefault();
-            let formData = new FormData();
-            formData.append("file", document.getElementById("file-input").files[0]);
-
-            fetch("/", {
-                method: "POST",
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    document.getElementById("result").innerHTML = `<p style="color:red;">${data.error}</p>`;
-                } else {
-                    document.getElementById("result").innerHTML = `
-                        <p>سن بیولوژیکی تخمین زده شده: <strong>${data.age}</strong> سال</p>
-                        <img src="${data.image}" alt="Uploaded Image" style="max-width:200px;">
-                    `;
-                }
-            });
-        });
-    </script>
+  <div class="container">
+    <h1 class="text-center mb-4">تخمینگر سن بیولوژیکی موزارکس</h1>
+    <p class="text-center">لطفاً عکس چهره خود را برای پیش‌بینی سن بیولوژیکی بارگذاری کنید.</p>
+    <form action="/predict" method="post" enctype="multipart/form-data" class="mt-4">
+      <div class="form-group text-center">
+        <input type="file" name="photo" accept="image/*" class="form-control-file" required>
+      </div>
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary">پیش‌بینی</button>
+      </div>
+    </form>
+  </div>
+  <footer>
+    <img src="/static/logo.jpeg" alt="لوگوی موزارکس">
+    <p>کلیه حقوق محفوظ است &copy;</p>
+  </footer>
 </body>
 </html>
