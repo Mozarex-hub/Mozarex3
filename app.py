@@ -4,11 +4,12 @@ import cv2
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import load_model
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key_here"
 app.config["UPLOAD_FOLDER"] = "static/uploads"
-app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024  # حداکثر حجم 16 مگابایت
+app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024  # Maximum file size 16 MB
 
 # Ensure the upload directory exists
 os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
@@ -57,22 +58,24 @@ def predict_biologic_age(image_path):
 def index():
     if request.method == "POST":
         if "photo" not in request.files:
-            flash("فایلی در درخواست یافت نشد.")
+            flash("فایلی در درخواست یافت نشد.", "warning")
             return redirect(request.url)
         file = request.files["photo"]
         if file.filename == "":
-            flash("فایلی انتخاب نشده است.")
+            flash("فایلی انتخاب نشده است.", "warning")
             return redirect(request.url)
-        if file:
-            filename = file.filename  # Consider renaming for production
-            secure_name = os.path.join(app.config["UPLOAD_FOLDER"], os.path.basename(filename))
-            file.save(secure_name)
-            
-            # Predict biologic age using the model
-            predictions = predict_biologic_age(secure_name)
-            file_url = url_for("static", filename="uploads/" + os.path.basename(filename))
-            
-            return render_template("result.html", predictions=predictions, file_url=file_url)
+        
+        # Secure the filename and save the file
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+        file.save(filepath)
+        
+        # Predict biologic age and generate the file URL for display
+        predictions = predict_biologic_age(filepath)
+        file_url = url_for("static", filename="uploads/" + filename)
+        return render_template("result.html", predictions=predictions, file_url=file_url)
+    
+    # Render the futuristic index page
     return render_template("index.html")
 
 if __name__ == "__main__":
