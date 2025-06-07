@@ -1,267 +1,51 @@
-<!doctype html>
-<html lang="fa" dir="rtl">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="تعیین سن بیولوژیک توسط MOZAREX™, ابزار تحلیل عکس به صورت پیشرفته">
-    <meta name="author" content="MOZAREX">
-    <title>
-      تعیین سن بیولوژیک توسط MOZAREX<sup style="font-size: 0.7em; vertical-align: super;">™</sup>
-    </title>
-    <link rel="icon" type="image/png" href="/static/favicon.png"/>
-  
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  
-    <!-- Animate.css for animations -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    
-    <!-- Vazir Font -->
-    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet" type="text/css"/>
-    
-    <style>
-      :root {
-        --primary-color: #00d1ff; /* Neon Blue */
-        --secondary-color: #141E30;
-        --tertiary-color: #243B55;
-        --bg-gradient: linear-gradient(135deg, var(--secondary-color), var(--tertiary-color));
-        --card-bg: rgba(255, 255, 255, 0.1);
-        --card-border: rgba(255, 255, 255, 0.2);
-        --text-color: #fff;
-      }
-      
-      /* Animated Gradient Background */
-      @keyframes gradientAnimation {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-      }
-      
-      /* Neon Glow for Headings */
-      @keyframes neonGlow {
-        from {
-          text-shadow: 0 0 5px var(--primary-color), 0 0 10px var(--primary-color);
-        }
-        to {
-          text-shadow: 0 0 20px var(--primary-color), 0 0 30px var(--primary-color);
-        }
-      }
-      
-      /* Base Styles */
-      body {
-        background: var(--bg-gradient);
-        background-size: 400% 400%;
-        animation: gradientAnimation 15s ease infinite;
-        font-family: 'Vazir', sans-serif;
-        color: var(--text-color);
-        margin: 0;
-        padding: 0;
-      }
-      
-      /* Header & Navigation with Glassmorphism */
-      header {
-        background: rgba(0, 0, 0, 0.5);
-        backdrop-filter: blur(10px);
-        position: fixed;
-        width: 100%;
-        top: 0;
-        z-index: 1000;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-      }
-      .navbar-brand {
-        font-weight: bold;
-        color: var(--primary-color) !important;
-        font-size: 1.8rem;
-      }
-      .navbar-toggler {
-        border-color: var(--primary-color);
-      }
-      .navbar-toggler-icon {
-        filter: invert(1);
-      }
-      
-      /* Hero Section with Animated Neon Effects */
-      .hero-section {
-        padding-top: 120px;
-        padding-bottom: 60px;
-        text-align: center;
-      }
-      .hero-section img {
-        max-height: 90px;
-        filter: drop-shadow(0 0 10px var(--primary-color));
-      }
-      .hero-section h1 {
-        font-size: 3rem;
-        margin-bottom: 0.5rem;
-        animation: neonGlow 1.5s ease-in-out infinite alternate;
-      }
-      .hero-section h3 {
-        font-size: 1.8rem;
-        color: var(--primary-color);
-      }
-      
-      /* Futuristic Glassmorphism Card */
-      .card {
-        background: var(--card-bg);
-        backdrop-filter: blur(10px);
-        border: 1px solid var(--card-border);
-        border-radius: 20px;
-        box-shadow: 0 10px 32px rgba(31, 38, 135, 0.37);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-      }
-      .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
-      }
-      .card .form-label {
-        font-weight: bold;
-      }
-      
-      /* Form Inputs */
-      .form-control {
-        background: rgba(255, 255, 255, 0.2);
-        border: none;
-        color: var(--text-color);
-      }
-      .form-control:focus {
-        background: rgba(255, 255, 255, 0.2);
-        box-shadow: none;
-      }
-      
-      /* Futuristic Button */
-      .btn-custom {
-        background: transparent;
-        border: 2px solid var(--primary-color);
-        border-radius: 50px;
-        padding: 12px 30px;
-        font-size: 1.1rem;
-        color: var(--primary-color);
-        transition: all 0.3s ease;
-        letter-spacing: 1px;
-      }
-      .btn-custom:hover {
-        background: var(--primary-color);
-        color: #000;
-        box-shadow: 0 0 20px var(--primary-color);
-      }
-      
-      /* Spinner Overlay Styling (No visible text) */
-      .spinner-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.8);
-        z-index: 1050;
-        display: none;
-        align-items: center;
-        justify-content: center;
-      }
-      .spinner-border {
-        width: 3rem;
-        height: 3rem;
-        border-width: 0.3em;
-      }
-      
-      /* Footer with Blurred Background */
-      .footer {
-        background: rgba(0, 0, 0, 0.5);
-        backdrop-filter: blur(5px);
-        text-align: center;
-        padding: 20px 0;
-        margin-top: 40px;
-        color: var(--text-color);
-      }
-      .footer img {
-        max-height: 50px;
-        filter: brightness(0) invert(1);
-      }
-      
-      /* Responsive Adjustments */
-      @media (max-width: 576px) {
-        .hero-section h1 {
-          font-size: 2.2rem;
-        }
-        .hero-section h3 {
-          font-size: 1.4rem;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <!-- Header and Navigation -->
-    <header>
-      <nav class="navbar navbar-expand-lg">
-        <div class="container">
-          <a class="navbar-brand" href="#">
-            MOZAREX<sup style="font-size: 0.7em; vertical-align: super;">™</sup>
-          </a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="تغییر حالت ناوبری">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbar-collapse">
-            <!-- Future futuristic links can be added here -->
-          </div>
-        </div>
-      </nav>
-    </header>
-    
-    <!-- Main Content -->
-    <main>
-      <!-- Hero Section -->
-      <section class="hero-section container">
-        <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="لوگوی شرکت" class="img-fluid animate__animated animate__fadeInDown">
-        <h1 class="animate__animated animate__fadeInDown">
-          تعیین سن بیولوژیک توسط MOZAREX<sup style="font-size: 0.7em; vertical-align: super;">™</sup>
-        </h1>
-        <h3 class="animate__animated animate__fadeInDown">نسخه 1.0</h3>
-      </section>
-      
-      <!-- Upload Form Section -->
-      <section class="container my-4">
-        <div class="card p-4 animate__animated animate__fadeInUp">
-          <div class="card-body">
-            <h4 class="card-title text-center mb-4">بارگذاری عکس</h4>
-            <form id="uploadForm" method="post" enctype="multipart/form-data" class="mx-auto" style="max-width: 500px;">
-              <div class="mb-3">
-                <label for="photo" class="form-label">انتخاب فایل</label>
-                <input type="file" class="form-control" id="photo" name="photo" accept="image/*" required>
-              </div>
-              <div class="d-grid">
-                <button type="submit" class="btn btn-custom">تحلیل</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </section>
-    </main>
-    
-    <!-- Fullscreen Spinner Overlay (No visible text) -->
-    <div id="spinnerOverlay" class="spinner-overlay d-flex">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">در حال بارگذاری...</span>
-      </div>
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mozarex Biologic Age Estimator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>تخمین سن بیولوژیکی</h1>
+        <p>عکس خود را بارگذاری کنید تا سن بیولوژیکی شما تخمین زده شود.</p>
+        
+        <form id="upload-form" enctype="multipart/form-data">
+            <input type="file" id="file-input" name="file" accept="image/*">
+            <button type="submit">بارگذاری و تخمین سن</button>
+        </form>
+        
+        <div id="result"></div>
+        
+        <footer>
+            <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="Mozarex Logo">
+            <p>تمامی حقوق محفوظ است © 2025 Mozarex</p>
+        </footer>
     </div>
-    
-    <!-- Footer -->
-    <footer class="footer">
-      <div>
-        <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="لوگوی شرکت" class="img-fluid animate__animated animate__fadeInUp" style="max-height: 50px;">
-      </div>
-      <p class="mt-2">تمامی حقوق محفوظ است</p>
-    </footer>
-    
-    <!-- Bootstrap Bundle JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Custom Script for the Spinner -->
+
     <script>
-      document.getElementById("uploadForm").addEventListener("submit", function() {
-        this.querySelector("button[type='submit']").disabled = true;
-        document.getElementById("spinnerOverlay").style.display = "flex";
-      });
+        document.getElementById("upload-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            let formData = new FormData();
+            formData.append("file", document.getElementById("file-input").files[0]);
+
+            fetch("/", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById("result").innerHTML = `<p style="color:red;">${data.error}</p>`;
+                } else {
+                    document.getElementById("result").innerHTML = `
+                        <p>سن بیولوژیکی تخمین زده شده: <strong>${data.age}</strong> سال</p>
+                        <img src="${data.image}" alt="Uploaded Image" style="max-width:200px;">
+                    `;
+                }
+            });
+        });
     </script>
-  </body>
+</body>
 </html>
