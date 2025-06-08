@@ -1,23 +1,20 @@
 import os
-# Force CPU-only processing
+# Force CPU-only processing and reduce TensorFlow verbosity
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
-# Optionally reduce TensorFlow logging verbosity.
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
-import os
 import logging
 from flask import Flask, render_template, request
 from deepface import DeepFace
 from werkzeug.utils import secure_filename
 
-# Configure logging for enhanced troubleshooting
+# Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s: %(message)s')
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-# Allowed image extensions
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 def allowed_file(filename):
@@ -47,8 +44,12 @@ def predict():
             logging.info(f"File saved to {image_path}")
 
             try:
-                # Use enforce_detection=False to bypass face detection issues in headless environments.
-                analysis = DeepFace.analyze(img_path=image_path, actions=["age"], enforce_detection=False)
+                analysis = DeepFace.analyze(
+                    img_path=image_path,
+                    actions=["age"],
+                    enforce_detection=False,
+                    detector_backend="retinaface"
+                )
                 if isinstance(analysis, list):
                     analysis = analysis[0]
                 age = analysis.get("age", None)
@@ -65,7 +66,6 @@ def predict():
             logging.error("File format not supported.")
             return "فرمت فایل پشتیبانی نمی‌شود", 400
     finally:
-        # Remove the file to conserve storage even if an error occurred.
         if image_path is not None and os.path.exists(image_path):
             try:
                 os.remove(image_path)
@@ -74,5 +74,5 @@ def predict():
                 logging.error(f"Error removing file: {e}")
 
 if __name__ == "__main__":
-    # For production deployment on Render, ensure to use a production-grade WSGI server.
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
