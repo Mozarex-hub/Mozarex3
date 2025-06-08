@@ -1,51 +1,25 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>تخمینگر سن بیولوژیکی موزارکس</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <style>
-    body {
-      background: linear-gradient(135deg, #141e30, #243b55);
-      color: #fff;
-      font-family: 'Arial', sans-serif;
-    }
-    .container {
-      margin-top: 100px;
-    }
-    .btn-primary {
-      background-color: #1abc9c;
-      border: none;
-    }
-    footer {
-      margin-top: 50px;
-      padding: 20px 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.3);
-      text-align: center;
-    }
-    footer img {
-      max-width: 80px;
-      margin-bottom: 10px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>برآوردگر سن بیولوژیک موزارکس</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <div class="container">
-    <h1 class="text-center mb-4">تخمینگر سن بیولوژیکی موزارکس</h1>
-    <p class="text-center">لطفاً عکس چهره خود را برای پیش‌بینی سن بیولوژیکی بارگذاری کنید.</p>
-    <form action="/predict" method="post" enctype="multipart/form-data" class="mt-4">
-      <div class="form-group text-center">
-        <input type="file" name="photo" accept="image/*" class="form-control-file" required>
-      </div>
-      <div class="text-center">
-        <button type="submit" class="btn btn-primary">پیش‌بینی</button>
-      </div>
-    </form>
-  </div>
-  <footer>
-    <img src="/static/logo.jpeg" alt="لوگوی موزارکس">
-    <p>کلیه حقوق محفوظ است &copy;</p>
-  </footer>
+    <div class="background"></div>
+    <header>
+        <h1>برآوردگر سن بیولوژیک موزارکس</h1>
+    </header>
+    <main>
+        <p>لطفاً عکس صورت خود را آپلود کنید:</p>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*">
+            <button type="submit">آپلود و برآورد</button>
+        </form>
+    </main>
+    <footer>
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="لوگوی موزارکس">
+        <p>کلیه حقوق محفوظ است © ۲۰۲۳ موزارکس</p>
+    </footer>
 </body>
 </html>
