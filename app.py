@@ -1,5 +1,13 @@
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "-1"  # Force TensorFlow to use CPU
+import tensorflow as tf
+
+# Force TensorFlow to use CPU
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+
+# Limit TensorFlow memory usage
+tf.config.set_soft_device_placement(True)
+tf.config.experimental.set_memory_growth(tf.config.list_physical_devices('CPU')[0], True)
+
 from flask import Flask, render_template, request
 from deepface import DeepFace
 from werkzeug.utils import secure_filename
