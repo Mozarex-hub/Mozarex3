@@ -2,52 +2,163 @@
 <html lang="fa">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mozarex Biologic Age Estimator</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Animate.css for smooth animations -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <!-- Persian-friendly font -->
+  <link href="https://fonts.googleapis.com/css2?family=Vazir&display=swap" rel="stylesheet">
   <style>
+    /* Global styles with a professional dark gradient */
     body {
-      background: linear-gradient(135deg, #4568dc, #b06ab3);
-      color: #fff;
-      direction: rtl;
-      font-family: 'Tahoma', sans-serif;
-      min-height: 100vh;
+      font-family: 'Vazir', Tahoma, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #141E30, #243B55);
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    header, footer {
+      width: 100%;
+      text-align: center;
+      padding: 20px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.8rem;
+      color: #fff;
     }
     .container {
-      margin-top: 80px;
-      max-width: 500px;
-      background: rgba(0, 0, 0, 0.3);
-      padding: 30px;
+      background: rgba(255, 255, 255, 0.05);
       border-radius: 12px;
-    }
-    .footer {
+      padding: 40px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      max-width: 500px;
+      width: 90%;
       text-align: center;
-      margin: 20px 0;
-      font-size: 14px;
     }
-    .footer img {
-      max-width: 100px;
-      margin-bottom: 5px;
+    /* Hide native file input; use custom styling */
+    input[type="file"] {
+      display: none;
+    }
+    .custom-file-upload {
+      border: 2px solid #38bdf8;
+      display: inline-block;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+      background: #1e293b;
+      color: #fff;
+      transition: all 0.3s ease;
+      margin-bottom: 20px;
+    }
+    .custom-file-upload:hover {
+      background: #38bdf8;
+    }
+    button {
+      background: #38bdf8;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      border-radius: 5px;
+      color: #fff;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #0ea5e9;
+    }
+    /* Preview image with fade-in effect */
+    img#preview {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+      animation: fadeIn 1s forwards;
+    }
+    /* Spinner styles for process indication */
+    .spinner {
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top: 4px solid #38bdf8;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px auto;
+      display: none;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    /* Footer styling */
+    footer img {
+      width: 80px;
+    }
+    footer p {
+      margin: 5px 0 0;
+      font-size: 0.9rem;
+      color: #ccc;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1 class="text-center mb-4">Mozarex Biologic Age Estimator</h1>
-    <form method="POST" enctype="multipart/form-data">
-      <div class="mb-3">
-        <label for="photo" class="form-label">لطفاً یک عکس از چهره خود بارگذاری کنید</label>
-        <input class="form-control" type="file" id="photo" name="photo" accept="image/*" required>
-      </div>
-      <button type="submit" class="btn btn-primary w-100">پیش‌بینی سن زیستی</button>
+  <header>
+    <h1 class="animate__animated animate__fadeInDown">Mozarex Biologic Age Estimator</h1>
+  </header>
+  <div class="container animate__animated animate__fadeInUp">
+    <form id="uploadForm" action="/predict" method="post" enctype="multipart/form-data">
+      <!-- Custom File Upload -->
+      <label class="custom-file-upload" for="fileInput">انتخاب تصویر</label>
+      <input id="fileInput" type="file" name="image" accept="image/*" required>
+      
+      <!-- Image preview -->
+      <img id="preview" alt="پیش نمایش تصویر">
+      
+      <!-- Spinner -->
+      <div class="spinner" id="spinner"></div>
+      
+      <br>
+      <button type="submit">پیش‌بینی سن زیستی</button>
     </form>
   </div>
-  <div class="footer">
-    <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="Logo"><br>
-    &copy; همه حقوق محفوظ است.
-  </div>
+  <footer>
+    <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="Logo">
+    <p>© تمامی حقوق محفوظ است</p>
+  </footer>
+  
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const preview = document.getElementById('preview');
+    const uploadForm = document.getElementById('uploadForm');
+    const spinner = document.getElementById('spinner');
+
+    // Display image preview when file is selected
+    fileInput.addEventListener('change', function() {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.addEventListener('load', function() {
+          preview.setAttribute('src', this.result);
+          preview.style.display = 'block';
+        });
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Show spinner on form submission
+    uploadForm.addEventListener('submit', function() {
+      spinner.style.display = 'block';
+    });
+  </script>
 </body>
 </html>
