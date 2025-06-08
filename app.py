@@ -4,12 +4,8 @@ from flask import Flask, render_template, request
 from deepface import DeepFace
 from werkzeug.utils import secure_filename
 
-# Force TensorFlow to use CPU and limit memory usage
+# Force TensorFlow to use CPU
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
-tf.config.set_soft_device_placement(True)
-physical_devices = tf.config.list_physical_devices('CPU')
-if physical_devices:
-    tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
 app = Flask(__name__)
 
