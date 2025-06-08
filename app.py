@@ -43,7 +43,7 @@ def predict():
         file.save(filepath)
 
         try:
-result = DeepFace.analyze(img_path=filepath, actions=['age'], enforce_detection=False)
+result = DeepFace.analyze(img_path=filepath, actions=['age'])
             age = result[0]['age']
         except Exception as e:
             age = "خطا در پردازش تصویر"
