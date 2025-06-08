@@ -16,6 +16,13 @@
       justify-content: center;
       text-align: center;
     }
+    .container {
+      max-width: 500px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      backdrop-filter: blur(10px);
+    }
     .footer {
       text-align: center;
       padding: 1rem 0;
@@ -30,3 +37,17 @@
   <div class="container">
     <h1>Mozarex Biologic Age Estimator</h1>
     <p>لطفا عکس چهره خود را بارگذاری کنید تا سن زیستی شما پیش‌بینی شود.</p>
+    
+    <!-- File Upload Form -->
+    <form method="POST" action="/predict" enctype="multipart/form-data" class="mt-4">
+      <input class="form-control" type="file" name="file" accept="image/*" required>
+      <button type="submit" class="btn btn-primary mt-3">ارسال تصویر</button>
+    </form>
+  </div>
+
+  <div class="footer">
+    <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="لوگو">
+    <p>کلیه حقوق محفوظ است</p>
+  </div>
+</body>
+</html>
