@@ -1,8 +1,6 @@
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 from flask import Flask, render_template, request
 from deepface import DeepFace
-import os
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
@@ -44,4 +42,5 @@ def predict():
         return render_template('result.html', age=age, filename=filename)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    port = int(os.environ.get("PORT", 10000))  # Use Render's assigned port
+    app.run(host='0.0.0.0', port=port, debug=True)
