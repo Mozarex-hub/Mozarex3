@@ -1,4 +1,5 @@
 import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"  # Force TensorFlow to use CPU
 from flask import Flask, render_template, request
 from deepface import DeepFace
 from werkzeug.utils import secure_filename
