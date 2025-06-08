@@ -1,21 +1,53 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="fa">
 <head>
-    <meta charset="UTF-8">
-    <title>برآوردگر سن بیولوژیک موزارکس</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mozarex Biologic Age Estimator</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #4568dc, #b06ab3);
+      color: #fff;
+      direction: rtl;
+      font-family: 'Tahoma', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .container {
+      margin-top: 80px;
+      max-width: 500px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 30px;
+      border-radius: 12px;
+    }
+    .footer {
+      text-align: center;
+      margin: 20px 0;
+      font-size: 14px;
+    }
+    .footer img {
+      max-width: 100px;
+      margin-bottom: 5px;
+    }
+  </style>
 </head>
 <body>
-    <div class="background"></div>
-    <header>
-        <h1>برآوردگر سن بیولوژیک موزارکس</h1>
-    </header>
-    <main>
-        <h2>سن بیولوژیک شما: <span class="age">{{ age }}</span></h2>
-    </main>
-    <footer>
-        <img src="{{ url_for('static', filename='logo.png') }}" alt="لوگوی موزارکس">
-        <p>کلیه حقوق محفوظ است © ۲۰۲۳ موزارکس</p>
-    </footer>
+  <div class="container">
+    <h1 class="text-center mb-4">Mozarex Biologic Age Estimator</h1>
+    <form method="POST" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label for="photo" class="form-label">لطفاً یک عکس از چهره خود بارگذاری کنید</label>
+        <input class="form-control" type="file" id="photo" name="photo" accept="image/*" required>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">پیش‌بینی سن زیستی</button>
+    </form>
+  </div>
+  <div class="footer">
+    <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="Logo"><br>
+    &copy; همه حقوق محفوظ است.
+  </div>
 </body>
 </html>
