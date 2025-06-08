@@ -1,8 +1,5 @@
-Flask
-Werkzeug
-opencv-python
-numpy
-tensorflow
-gunicorn
-deepface
-tf-keras
+Flask>=2.0
+deepface>=0.0.75
+opencv-python-headless>=4.5.0
+tensorflow>=2.6
+
