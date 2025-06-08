@@ -1,5 +1,5 @@
 import os
-# Force CPU-only processing and reduce TensorFlow verbosity
+# Force CPU-only processing and reduce TensorFlow logging verbosity
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
@@ -19,6 +19,11 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# Health-check route to confirm the server is running
+@app.route("/ping")
+def ping():
+    return "pong", 200
 
 @app.route("/")
 def index():
@@ -44,6 +49,7 @@ def predict():
             logging.info(f"File saved to {image_path}")
 
             try:
+                # Analyze the image with DeepFace while using robust detection settings.
                 analysis = DeepFace.analyze(
                     img_path=image_path,
                     actions=["age"],
