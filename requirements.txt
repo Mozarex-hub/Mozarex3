@@ -2,4 +2,7 @@ Flask
 deepface
 gunicorn
 werkzeug
+numpy
+opencv-python
+tensorflow-cpu
 tf-keras
