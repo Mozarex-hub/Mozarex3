@@ -4,7 +4,7 @@ from flask import Flask, render_template, request
 from deepface import DeepFace
 from werkzeug.utils import secure_filename
 
-# Configure logging for a professional environment
+# Configure logging for enhanced troubleshooting
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s: %(message)s')
 
 app = Flask(__name__)
@@ -41,8 +41,8 @@ def predict():
             logging.info(f"File saved to {image_path}")
 
             try:
-                analysis = DeepFace.analyze(img_path=image_path, actions=["age"])
-                # DeepFace may return a list or a dict
+                # Use enforce_detection=False to bypass face detection issues in headless environments.
+                analysis = DeepFace.analyze(img_path=image_path, actions=["age"], enforce_detection=False)
                 if isinstance(analysis, list):
                     analysis = analysis[0]
                 age = analysis.get("age", None)
@@ -51,7 +51,7 @@ def predict():
                 age = int(round(age))
                 logging.info(f"Predicted age: {age}")
             except Exception as e:
-                logging.error(f"Error during deepface analysis: {e}")
+                logging.error(f"Error during DeepFace analysis: {e}")
                 return f"خطا در پردازش تصویر: {str(e)}", 500
 
             return render_template("result.html", age=age)
@@ -59,7 +59,7 @@ def predict():
             logging.error("File format not supported.")
             return "فرمت فایل پشتیبانی نمی‌شود", 400
     finally:
-        # Ensure the file is removed to conserve storage
+        # Remove the file to conserve storage even if an error occurred.
         if image_path is not None and os.path.exists(image_path):
             try:
                 os.remove(image_path)
@@ -68,5 +68,5 @@ def predict():
                 logging.error(f"Error removing file: {e}")
 
 if __name__ == "__main__":
-    # For production, make sure to configure a proper WSGI server and disable debug mode.
+    # For production deployment on Render, ensure to use a production-grade WSGI server.
     app.run(debug=True)
