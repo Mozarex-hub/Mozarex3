@@ -1,16 +1,15 @@
 import os
 import tensorflow as tf
-
-# Force TensorFlow to use CPU
-os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
-
-# Limit TensorFlow memory usage
-tf.config.set_soft_device_placement(True)
-tf.config.experimental.set_memory_growth(tf.config.list_physical_devices('CPU')[0], True)
-
 from flask import Flask, render_template, request
 from deepface import DeepFace
 from werkzeug.utils import secure_filename
+
+# Force TensorFlow to use CPU and limit memory usage
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+tf.config.set_soft_device_placement(True)
+physical_devices = tf.config.list_physical_devices('CPU')
+if physical_devices:
+    tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
 app = Flask(__name__)
 
@@ -43,7 +42,8 @@ def predict():
         file.save(filepath)
 
         try:
-result = DeepFace.analyze(img_path=filepath, actions=['age'])
+            # Optimize DeepFace call to reduce memory usage
+            result = DeepFace.analyze(img_path=filepath, actions=['age'], enforce_detection=False)
             age = result[0]['age']
         except Exception as e:
             age = "خطا در پردازش تصویر"
