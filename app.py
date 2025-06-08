@@ -1,4 +1,10 @@
 import os
+# Force CPU-only processing
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+# Optionally reduce TensorFlow logging verbosity.
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
+
+import os
 import logging
 from flask import Flask, render_template, request
 from deepface import DeepFace
