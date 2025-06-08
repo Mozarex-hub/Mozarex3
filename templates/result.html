@@ -1,53 +1,21 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>نتیجه پیش‌بینی سن بیولوژیکی - موزارکس</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <style>
-    body {
-      background: linear-gradient(135deg, #141e30, #243b55);
-      color: #fff;
-      font-family: 'Arial', sans-serif;
-    }
-    .container {
-      margin-top: 100px;
-    }
-    .btn-secondary {
-      background-color: #1abc9c;
-      border: none;
-    }
-    footer {
-      margin-top: 50px;
-      padding: 20px 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.3);
-      text-align: center;
-    }
-    footer img {
-      max-width: 80px;
-      margin-bottom: 10px;
-    }
-    .result-image {
-      max-width: 300px;
-      border-radius: 10px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>برآوردگر سن بیولوژیک موزارکس</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <div class="container">
-    <h1 class="text-center mb-4">نتیجه پیش‌بینی سن بیولوژیکی</h1>
-    <div class="text-center">
-      <img src="{{ url_for('static', filename='uploads/' ~ filename) }}" alt="عکس شما" class="result-image mb-3">
-    </div>
-    <p class="text-center">سن بیولوژیکی شما: <strong>{{ predicted_age }}</strong> سال</p>
-    <div class="text-center mt-4">
-      <a href="{{ url_for('index') }}" class="btn btn-secondary">بازگشت به صفحه اصلی</a>
-    </div>
-  </div>
-  <footer>
-    <img src="/static/logo.jpeg" alt="لوگوی موزارکس">
-    <p>کلیه حقوق محفوظ است &copy;</p>
-  </footer>
+    <div class="background"></div>
+    <header>
+        <h1>برآوردگر سن بیولوژیک موزارکس</h1>
+    </header>
+    <main>
+        <h2>سن بیولوژیک شما: <span class="age">{{ age }}</span></h2>
+    </main>
+    <footer>
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="لوگوی موزارکس">
+        <p>کلیه حقوق محفوظ است © ۲۰۲۳ موزارکس</p>
+    </footer>
 </body>
 </html>
